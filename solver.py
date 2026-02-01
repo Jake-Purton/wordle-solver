@@ -1,10 +1,11 @@
-
+import pathlib
 
 
 class WordleSolver:
     def __init__(self, word_length=5):
         self.word_length = word_length
-        with open("words_alpha.txt", "r") as f:
+        current = pathlib.Path(__file__).parent.resolve()
+        with open(current / "words_alpha.txt", "r") as f:
             all_words = f.read().split()
 
         self.word_list = []
