@@ -1,4 +1,5 @@
 import pygame
+import threading
 from UIpygame import PyUI as pyui
 
 from solver import WordleSolver
@@ -72,16 +73,28 @@ def get_prev_words():
     return prev_words
 
 def refresh_words():
-    ui.delete("valid_words", False)
-    ui.delete("valid_words_title", False)
+    global solver_threads
+    if "valid_words_title" not in ui.IDs:
+        ui.maketext(460, 20, f"Best Words List", 40, ID="valid_words_title")
+        ui.maketext(460, 60, "Loading...", maxwidth=600, ID="valid_words")
+    ui.IDs["valid_words"].settext("Loading...")
+    for thread_id in solver_threads:
+        solver_threads[thread_id] = False
+    new_thread = threading.Thread(target=run_solver)
+    new_thread.start()
+    solver_threads[new_thread.ident] = True
+
+def run_solver():
     words = solver.get_best_words(get_prev_words())
     num_words = len(words)
 
-    st = ", ".join(list(map(lambda x: x.upper(), words[:30])))
+    if solver_threads[threading.get_ident()]:
+        st = ", ".join(list(map(lambda x: x.upper(), words[:30])))
 
-    ui.maketext(460, 20, f"Best Words out of {num_words} possible:", 40, ID="valid_words_title")
-    ui.maketext(460, 60, st, maxwidth=600, ID="valid_words")
+        ui.IDs["valid_words_title"].settext(f"Best Words out of {num_words} possible:")
+        ui.IDs["valid_words"].settext(st)
 
+solver_threads = {}
 current_word = 0
 current_letter = 0
 word_length = 5
