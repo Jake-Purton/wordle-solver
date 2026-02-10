@@ -2,6 +2,7 @@ import random
 from WordleState import WordleState
 from word_loader import load_words
 from CustomerSolverAlgBase import CustomerSolverAlgBase
+from GreekSolver import GreekSolver
 from SimpleSolverAlg import SimpleSolverAlg
 import tqdm
 
@@ -34,7 +35,7 @@ def main():
     random.seed(2)
     sample_size = 100
     # solver_class = CustomerSolverAlgBase
-    solver_class = SimpleSolverAlg
+    solver_class = GreekSolver
 
     word_list = load_words(5)
 
