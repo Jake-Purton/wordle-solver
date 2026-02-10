@@ -9,11 +9,15 @@ import tqdm
 def test_solver(answer_word, solver_class, word_list):
     state = WordleState()
     state.set_answer(answer_word)
-    solver = solver_class(word_length=len(answer_word))
+    state2 = WordleState()
+    state2.set_answer(None)
+
+    solver = solver_class(word_length=len(answer_word), word_list=word_list)
     for g in range(6):
-        guess = solver.get_best_word(state.copy(), word_list)
+        guess = solver.get_best_word(state2.copy())
         assert(guess in word_list)
-        state.add_guess(guess)
+        c = state.add_guess(guess)
+        state2.add_guess(guess, c)
         if guess == answer_word:
             return g+1
     return -1
@@ -33,9 +37,9 @@ def generate_sample(word_list, sample_size):
 
 def main():
     random.seed(2)
-    sample_size = 100
-    # solver_class = CustomerSolverAlgBase
-    solver_class = GreekSolver
+    sample_size = 1000
+    solver_class = SimpleSolverAlg
+    # solver_class = GreekSolver
 
     word_list = load_words(5)
 

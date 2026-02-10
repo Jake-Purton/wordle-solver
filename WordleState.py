@@ -53,6 +53,8 @@ class WordleState:
         # TODO: update to cache the previous compilation and reuse it
         self.compile_prev_data()
 
+        return correctness
+
     def set_guess_data(self, guess_data: list[list[dict]]):
         self.previous_guesses = guess_data
         self.compile_prev_data()
@@ -83,6 +85,15 @@ class WordleState:
 
     def filter_valid_words(self, word_list):
         return list(filter(self.check_word_valid, word_list))
+    
+    def count_valid_words(self, word_list, alpha):
+        m = 0
+        for word in word_list:
+            if self.check_word_valid(word):
+                m += 1
+                if m > alpha:
+                    return m
+        return m
 
     def compile_prev_data(self):
         self.allowed_lists = [

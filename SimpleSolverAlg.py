@@ -1,11 +1,12 @@
 from CustomerSolverAlgBase import CustomerSolverAlgBase
 
 class SimpleSolverAlg(CustomerSolverAlgBase):
-    def __init__(self, word_length=5):
+    def __init__(self, word_list, word_length=5):
+        self.word_list = word_list
         super().__init__(word_length)
 
-    def get_best_word(self, game_state, word_list):
-        valid_words = game_state.filter_valid_words(word_list)
+    def get_best_word(self, game_state):
+        valid_words = game_state.filter_valid_words(self. word_list)
         self.letter_values = self.get_letter_values(valid_words)
         valid_words.sort(key=self.evaluate_word, reverse=True)
         return valid_words[0]
